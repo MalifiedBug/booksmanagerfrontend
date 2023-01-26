@@ -3,25 +3,33 @@ import '../App.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import BookCard from './BookCard';
+import { useContext } from 'react';
+import { MainContext } from '../App';
 
 function ShowBookList() {
-  const [books, setBooks] = useState([]);
+  const {searched,setSearched, filteredList, setFilteredList, books, setBooks} = useContext(MainContext)
+  
 
   useEffect(() => {
     axios
       .get('https://booksmanagerbackend.vercel.app/allbooks')
       .then((res) => {
         setBooks(res.data);
+        setFilteredList(res.data);
       })
       .catch((err) => {
         console.log('Error from ShowBookList');
       });
-  }, []);
+  }, []); 
+
+  
+
+
 
   const bookList =
     books.length === 0
       ? 'there is no book record!'
-      : books.map((book, k) => <BookCard book={book} key={k} />);
+      : filteredList.map((book, k) => <BookCard book={book} key={k} />);
 
   return (
     <div className='ShowBookList'>
